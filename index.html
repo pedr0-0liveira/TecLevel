@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LevelTecUp — Preparação IFAM · CMM · Matias Machline</title>
+
+  <!-- Google Fonts: Syne (display) + DM Sans (corpo) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Chart.js — gráficos de desempenho -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Estilos da plataforma -->
+  <link rel="stylesheet" href="src/css/style.css" />
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════════════
+       SIDEBAR — navegação lateral fixa
+  ════════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">⚡</div>
+      <span class="brand-name">LevelTecUp</span>
+    </div>
+
+    <!-- Perfil compacto do usuário ativo -->
+    <div class="sidebar-profile" id="sidebarProfile">
+      <div class="profile-avatar" id="sidebarAvatar">A</div>
+      <div class="profile-info">
+        <span class="profile-name" id="sidebarName">Aluno</span>
+        <span class="profile-role" id="sidebarRole">Estudante</span>
+      </div>
+    </div>
+
+    <!-- Links de navegação principal -->
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-view="dashboard" onclick="navigateTo('dashboard')">
+        <span class="nav-icon">🏠</span> Dashboard
+      </button>
+      <button class="nav-item" data-view="modulos" onclick="navigateTo('modulos')">
+        <span class="nav-icon">📚</span> Módulos
+      </button>
+      <button class="nav-item" data-view="professor" onclick="navigateTo('professor')">
+        <span class="nav-icon">🎓</span> Painel do Professor
+      </button>
+      <button class="nav-item" data-view="materiais" onclick="navigateTo('materiais')">
+        <span class="nav-icon">📎</span> Materiais
+      </button>
+    </nav>
+
+    <!-- Switch de perfil (Aluno / Professor) -->
+    <div class="sidebar-footer">
+      <div class="role-switcher">
+        <button class="role-btn active" id="btnAluno"  onclick="switchRole('aluno')">Aluno</button>
+        <button class="role-btn"        id="btnProf"   onclick="switchRole('professor')">Professor</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ════════════════════════════════════════════════
+       CONTEÚDO PRINCIPAL
+  ════════════════════════════════════════════════ -->
+  <main class="main-content" id="mainContent">
+
+    <!-- ── VIEW: DASHBOARD ──────────────────────── -->
+    <section class="view" id="view-dashboard">
+      <header class="page-header">
+        <div>
+          <h1 class="page-title">Dashboard</h1>
+          <p class="page-subtitle" id="dashGreeting">Bom dia! Vamos estudar para o IFAM? ☀️</p>
+        </div>
+        <div class="header-xp-badge">
+          <span class="xp-label">XP Total</span>
+          <span class="xp-value" id="headerXP">0</span>
+        </div>
+      </header>
+
+      <!-- Cards de estatísticas rápidas -->
+      <div class="stats-grid">
+        <div class="stat-card accent-green">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-info">
+            <span class="stat-value" id="statXP">0</span>
+            <span class="stat-label">XP Acumulado</span>
+          </div>
+        </div>
+        <div class="stat-card accent-blue">
+          <div class="stat-icon">✅</div>
+          <div class="stat-info">
+            <span class="stat-value" id="statConcluidos">0</span>
+            <span class="stat-label">Subtemas Concluídos</span>
+          </div>
+        </div>
+        <div class="stat-card accent-purple">
+          <div class="stat-icon">📈</div>
+          <div class="stat-info">
+            <span class="stat-value" id="statProgresso">0%</span>
+            <span class="stat-label">Progresso Geral</span>
+          </div>
+        </div>
+        <div class="stat-card accent-orange">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-info">
+            <span class="stat-value" id="statStreak">1</span>
+            <span class="stat-label">Dias Seguidos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progresso global + Barra de nível -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Progresso Total do Curso</h2>
+          <span class="badge" id="progressBadge">🌱 Iniciante</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="globalProgressBar" style="width: 0%"></div>
+        </div>
+        <p class="progress-caption" id="progressCaption">0 de 0 subtemas concluídos</p>
+
+        <!-- Barra de XP dentro do nível atual -->
+        <div class="nivel-xp-card">
+          <div class="nivel-xp-info">
+            <span class="nivel-xp-label">Progresso no nível atual</span>
+            <span class="nivel-xp-pct" id="xpProximoNivel">0 XP para Curioso</span>
+          </div>
+          <div class="nivel-track">
+            <div class="nivel-fill" id="nivelProgressBar" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico de desempenho por área + Ranking de erros -->
+      <div class="charts-row">
+        <div class="card chart-card">
+          <div class="card-header">
+            <h2 class="card-title">Desempenho por Área</h2>
+          </div>
+          <canvas id="chartDesempenho" height="220"></canvas>
+        </div>
+
+        <div class="card ranking-card">
+          <div class="card-header">
+            <h2 class="card-title">🚨 Temas com Mais Erros</h2>
+          </div>
+          <ul class="ranking-list" id="rankingErros">
+            <li class="ranking-empty">Nenhum dado ainda. Complete exercícios!</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Botão de reset (útil para desenvolvimento/testes) -->
+      <div style="text-align:right;margin-top:8px;">
+        <button class="btn-reset" onclick="engineReset()">🔄 Resetar Progresso</button>
+      </div>
+    </section>
+
+    <!-- ── VIEW: MÓDULOS ─────────────────────────────── -->
+    <section class="view hidden" id="view-modulos">
+      <header class="page-header">
+        <div>
+          <h1 class="page-title">Módulos de Aprendizagem</h1>
+          <p class="page-subtitle">Conteúdo focado no IFAM · CMM · Matias Machline</p>
+        </div>
+      </header>
+      <div id="modulosContainer"></div>
+    </section>
+
+    <!-- ── VIEW: SUBTEMA (detalhe) ───────────────── -->
+    <section class="view hidden" id="view-subtema">
+      <header class="page-header">
+        <button class="btn-back" onclick="navigateTo('modulos')">← Voltar</button>
+        <div>
+          <h1 class="page-title" id="subtemaTitulo">Subtema</h1>
+          <p class="page-subtitle" id="subtemaPath">Área › Tema</p>
+        </div>
+      </header>
+
+      <!-- Conteúdo textual -->
+      <div class="card content-card">
+        <h3 class="section-heading">📖 Conteúdo</h3>
+        <div class="content-text" id="subtemaConteudo"></div>
+      </div>
+
+      <!-- Vídeo placeholder -->
+      <div class="card">
+        <h3 class="section-heading">🎬 Videoaula</h3>
+        <div class="video-placeholder" id="subtemaVideo">
+          <div class="video-inner">
+            <span class="video-icon">▶</span>
+            <span>Videoaula (em breve)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exercícios -->
+      <div class="card" id="exerciciosCard">
+        <h3 class="section-heading">✏️ Exercícios</h3>
+        <div id="exerciciosList"></div>
+      </div>
+
+      <!-- Conclusão e XP -->
+      <div class="card completion-card">
+        <div class="completion-info">
+          <div>
+            <h3>Marcar como Concluído</h3>
+            <p>Ganhe XP ao finalizar este subtema!</p>
+          </div>
+          <div class="xp-reward" id="xpReward">+50 XP</div>
+        </div>
+        <button class="btn-complete" id="btnConcluir" onclick="concluirSubtema()">
+          ✅ Concluir Subtema
+        </button>
+      </div>
+    </section>
+
+    <!-- ── VIEW: PAINEL DO PROFESSOR ─────────────── -->
+    <section class="view hidden" id="view-professor">
+      <header class="page-header">
+        <div>
+          <h1 class="page-title">Painel do Professor</h1>
+          <p class="page-subtitle">Monitore o desempenho da turma em tempo real</p>
+        </div>
+      </header>
+
+      <div class="card chart-card-full">
+        <div class="card-header">
+          <h2 class="card-title">📊 Desempenho da Turma por Área</h2>
+        </div>
+        <canvas id="chartTurma" height="150"></canvas>
+      </div>
+
+      <div class="prof-grid">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">🚨 Ranking de Erros da Turma</h2>
+          </div>
+          <ul class="ranking-list" id="rankingErrosTurma">
+            <li class="ranking-empty">Aguardando dados dos alunos...</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">👥 Ranking de Alunos</h2>
+          </div>
+          <ul class="students-list" id="alunosList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── VIEW: MATERIAIS ───────────────────────────── -->
+    <section class="view hidden" id="view-materiais">
+      <header class="page-header">
+        <div>
+          <h1 class="page-title">Materiais Complementares</h1>
+          <p class="page-subtitle">Anexe e gerencie recursos de estudo</p>
+        </div>
+      </header>
+
+      <div class="card">
+        <h3 class="section-heading">📤 Enviar Material</h3>
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+          <div class="upload-icon">📂</div>
+          <p>Clique para selecionar um arquivo</p>
+          <span class="upload-hint">Suporta: PDF, EPUB, DOCX, PPTX</span>
+        </div>
+        <!-- Input file oculto — não realiza upload real -->
+        <input type="file" id="fileInput" hidden accept=".pdf,.epub,.docx,.pptx"
+               onchange="simularUpload(this)" />
+        <div class="upload-form">
+          <input type="text"   id="uploadNome"  class="input-field" placeholder="Título do material" />
+          <select              id="uploadArea2" class="input-field">
+            <option value="">Selecionar área...</option>
+            <option value="Matemática">Matemática</option>
+            <option value="Física">Física</option>
+            <option value="Português">Português</option>
+            <option value="Ciências">Ciências</option>
+            <option value="Geral">Geral</option>
+          </select>
+          <button class="btn-primary" onclick="adicionarMaterial()">Adicionar Material</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="section-heading">📚 Biblioteca de Materiais</h3>
+        <ul class="materiais-list" id="materiaisList">
+          <li class="ranking-empty">Nenhum material adicionado ainda.</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast de notificação (XP, nível, avisos) -->
+  <div class="xp-toast hidden" id="xpToast">
+    <span class="toast-icon">⭐</span>
+    <span id="toastMsg">+50 XP conquistado!</span>
+  </div>
+
+  <!--
+    ═══════════════════════════════════════════════════
+    SCRIPTS — carregados na ordem de dependência:
+    1. data.js   → CATALOGO e ALUNOS_TURMA
+    2. engine.js → AppState, NIVEIS e funções de engine*
+    3. main.js   → renderização e navegação (usa os anteriores)
+    ═══════════════════════════════════════════════════
+  -->
+  <script src="src/js/data.js"></script>
+  <script src="src/js/engine.js"></script>
+  <script src="src/js/main.js"></script>
+</body>
+</html>

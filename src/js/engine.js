@@ -111,15 +111,6 @@ let chartTurma      = null;
 //  ENGINE — Funções de Gestão de identidade
 // ═══════════════════════════════════════════════════════════
 
-// 2. Função para carregar dados (atualizada)
-function engineLoad() {
-  const saved = localStorage.getItem('LevelTecUp_Data');
-  if (saved) {
-    const data = JSON.parse(saved);
-    Object.assign(AppState, data);
-  }
-}
-
 // 3. Função para Registrar Usuário
 function engineRegistrar(novoUsuario) {
   // Verifica se o username já existe
@@ -150,6 +141,9 @@ function engineValidarLogin(user, pass) {
 // ═══════════════════════════════════════════════════════════
 
 const LS_KEYS = {
+usuarios:     'leveltecup_usuarios',
+  userLogado:   'leveltecup_userLogado',
+  isLoggedIn:   'leveltecup_isLoggedIn',
   progresso:    'leveltecup_progresso',
   xpTotal:      'leveltecup_xp',
   ranking:      'leveltecup_ranking',
@@ -172,6 +166,9 @@ const LS_KEYS = {
  */
 function engineLoad() {
   try {
+    const users  = localStorage.getItem(LS_KEYS.usuarios);
+    const logged = localStorage.getItem(LS_KEYS.userLogado);
+    const isLog  = localStorage.getItem(LS_KEYS.isLoggedIn);
     const p = localStorage.getItem(LS_KEYS.progresso);
     const x = localStorage.getItem(LS_KEYS.xpTotal);
     const r = localStorage.getItem(LS_KEYS.ranking);
@@ -185,6 +182,9 @@ function engineLoad() {
     if (m) AppState.materiais    = JSON.parse(m);
     if (s) AppState.streak       = Number(s);
     if (u) AppState.ultimoAcesso = u;
+    if (users)  AppState.usuarios   = JSON.parse(users);
+    if (logged) AppState.userLogado = JSON.parse(logged);
+    if (isLog)  AppState.isLoggedIn = isLog === 'true';
 
     // Atualiza streak ao carregar
     engineAtualizarStreak();
@@ -200,12 +200,16 @@ function engineLoad() {
  */
 function engineSave() {
   try {
+    localStorage.setItem(LS_KEYS.usuarios,   JSON.stringify(AppState.usuarios));
+    localStorage.setItem(LS_KEYS.userLogado, JSON.stringify(AppState.userLogado));
+    localStorage.setItem(LS_KEYS.isLoggedIn, String(AppState.isLoggedIn));
     localStorage.setItem(LS_KEYS.progresso,    JSON.stringify(AppState.progresso));
     localStorage.setItem(LS_KEYS.xpTotal,      String(AppState.xpTotal));
     localStorage.setItem(LS_KEYS.ranking,      JSON.stringify(AppState.ranking));
     localStorage.setItem(LS_KEYS.materiais,    JSON.stringify(AppState.materiais));
     localStorage.setItem(LS_KEYS.streak,       String(AppState.streak));
     localStorage.setItem(LS_KEYS.ultimoAcesso, AppState.ultimoAcesso || '');
+    
   } catch (e) {
     console.warn('[Engine] Falha ao salvar estado:', e);
   }

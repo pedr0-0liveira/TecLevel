@@ -587,8 +587,8 @@ function concluirSubtema() {
   const ctx = engineEncontrarSubtema(id);
   if (!ctx) return;
 
-  const { subiu, nivelDepois } = engineAdicionarXP(0); // Preview
-  const foiConcluido = engineConcluirSubtema(id, ctx.subtema.xp);
+const nivelAntes = engineGetNivel(AppState.xpTotal);
+const foiConcluido = engineConcluirSubtema(id, ctx.subtema.xp);
 
   if (!foiConcluido) return; // Já estava concluído
 

@@ -16,7 +16,60 @@
   <link rel="stylesheet" href="src/css/style.css" />
 </head>
 <body>
+  <!-- Cadastro e Login de usuário -->
+<section id="view-auth" class="view">
+  <div class="auth-container">
+    
+    <div id="auth-login-card" class="auth-card">
+      <div class="brand">⚡ LevelTecUp</div>
+      <h2>Entrar</h2>
+      <div class="form-group">
+        <label>Usuário</label>
+        <input type="text" id="loginUser" class="input-field">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="loginPass" class="input-field">
+      </div>
+      <button class="btn-primary btn-block" onclick="executarLogin()">Entrar</button>
+      <p class="auth-footer">Não tem conta? <a href="#" onclick="alternarAuth('cadastro')">Cadastre-se</a></p>
+    </div>
 
+    <div id="auth-register-card" class="auth-card hidden">
+      <div class="brand">⚡ LevelTecUp</div>
+      <h2>Novo Cadastro</h2>
+      
+      <div class="role-selector">
+        <button id="btnRoleAluno" class="btn-tab active" onclick="selecionarRole('aluno')">Sou Aluno</button>
+        <button id="btnRoleProf" class="btn-tab" onclick="selecionarRole('professor')">Sou Professor</button>
+      </div>
+
+      <div class="form-group">
+        <label id="labelNome">Nome Completo</label>
+        <input type="text" id="regNome" class="input-field">
+      </div>
+
+      <div id="groupIdade" class="form-group">
+        <label>Idade</label>
+        <input type="number" id="regIdade" class="input-field">
+      </div>
+
+      <div class="form-group">
+        <label>Nome de Usuário</label>
+        <input type="text" id="regUser" class="input-field">
+      </div>
+
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="regPass" class="input-field">
+      </div>
+
+      <button class="btn-primary btn-block" onclick="executarCadastro()">Criar Conta</button>
+      <p class="auth-footer">Já tem conta? <a href="#" onclick="alternarAuth('login')">Fazer Login</a></p>
+    </div>
+
+  </div>
+</section>
   <!-- ════════════════════════════════════════════════
        SIDEBAR — navegação lateral fixa
   ════════════════════════════════════════════════ -->

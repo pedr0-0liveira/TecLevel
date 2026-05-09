@@ -64,7 +64,11 @@ const NIVEIS = [
  * Modifique apenas via funções do Engine para garantir consistência.
  */
 const AppState = {
+
   // ── Perfil ──────────────────────────────────────────
+  usuarios: [],      // Lista de todos os cadastrados
+  userLogado: null,  // Objeto do usuário atual {nome, role, xp...}
+  isLoggedIn: false,
   role:         'aluno',     // 'aluno' | 'professor'
   viewAtual:    'dashboard', // ID da view ativa
   subtemaAtivo: null,        // ID do subtema aberto
@@ -102,6 +106,42 @@ const AppState = {
 // São armazenadas para permitir destruição antes de recriar.
 let chartDesempenho = null;
 let chartTurma      = null;
+
+// ═══════════════════════════════════════════════════════════
+//  ENGINE — Funções de Gestão de identidade
+// ═══════════════════════════════════════════════════════════
+
+// 2. Função para carregar dados (atualizada)
+function engineLoad() {
+  const saved = localStorage.getItem('LevelTecUp_Data');
+  if (saved) {
+    const data = JSON.parse(saved);
+    Object.assign(AppState, data);
+  }
+}
+
+// 3. Função para Registrar Usuário
+function engineRegistrar(novoUsuario) {
+  // Verifica se o username já existe
+  const existe = AppState.usuarios.find(u => u.usuario === novoUsuario.usuario);
+  if (existe) return { sucesso: false, msg: "Este nome de usuário já existe." };
+
+  AppState.usuarios.push(novoUsuario);
+  engineSave();
+  return { sucesso: true, msg: "Cadastro realizado com sucesso!" };
+}
+
+// 4. Função para Validar Login
+function engineValidarLogin(user, pass) {
+  const conta = AppState.usuarios.find(u => u.usuario === user && u.senha === pass);
+  if (conta) {
+    AppState.userLogado = conta;
+    AppState.isLoggedIn = true;
+    engineSave();
+    return { sucesso: true, role: conta.role };
+  }
+  return { sucesso: false, msg: "Usuário ou senha incorretos." };
+}
 
 // ═══════════════════════════════════════════════════════════
 // 3. CHAVES DO localStorage

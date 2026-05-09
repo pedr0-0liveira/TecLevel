@@ -48,6 +48,76 @@ let exerciciosRespondidos = {};
 let arquivoSelecionado = null;
 
 // ═══════════════════════════════════════════════════════════
+// 0. CADASTRO E LOGIN
+// Variável temporária para o cadastro
+let currentRoleSelected = 'aluno';
+
+function selecionarRole(role) {
+  currentRoleSelected = role;
+  document.getElementById('btnRoleAluno').classList.toggle('active', role === 'aluno');
+  document.getElementById('btnRoleProf').classList.toggle('active', role === 'professor');
+  
+  // Esconde o campo idade se for professor
+  document.getElementById('groupIdade').style.display = (role === 'aluno') ? 'block' : 'none';
+  document.getElementById('labelNome').textContent = (role === 'aluno') ? 'Nome Completo' : 'Nome do Professor';
+}
+
+function alternarAuth(tipo) {
+  document.getElementById('auth-login-card').classList.toggle('hidden', tipo === 'cadastro');
+  document.getElementById('auth-register-card').classList.toggle('hidden', tipo === 'login');
+}
+
+function executarCadastro() {
+  const nome = document.getElementById('regNome').value;
+  const idade = document.getElementById('regIdade').value;
+  const user = document.getElementById('regUser').value;
+  const pass = document.getElementById('regPass').value;
+
+  if(!nome || !user || !pass || (currentRoleSelected === 'aluno' && !idade)) {
+    alert("Preencha todos os campos!");
+    return;
+  }
+
+  const novo = {
+    nome,
+    usuario: user,
+    senha: pass,
+    role: currentRoleSelected,
+    idade: currentRoleSelected === 'aluno' ? idade : null,
+    xp: 0,
+    historico: []
+  };
+
+  const result = engineRegistrar(novo);
+  if(result.sucesso) {
+    alert(result.msg);
+    alternarAuth('login');
+  } else {
+    alert(result.msg);
+  }
+}
+
+function executarLogin() {
+  const user = document.getElementById('loginUser').value;
+  const pass = document.getElementById('loginPass').value;
+
+  const result = engineValidarLogin(user, pass);
+  if(result.sucesso) {
+    // Atualiza a UI da sidebar com os dados reais do usuário logado
+    document.getElementById('sidebarName').textContent = AppState.userLogado.nome;
+    document.getElementById('sidebarRole').textContent = result.role === 'aluno' ? 'Estudante' : 'Professor';
+    
+    if(result.role === 'aluno') {
+      navigateTo('dashboard');
+    } else {
+      navigateTo('professor');
+    }
+  } else {
+    alert(result.msg);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
 // 1. NAVEGAÇÃO SPA
 //    Controla qual "página" (view) é exibida sem recarregar.
 //    Todas as views existem no DOM simultaneamente;
@@ -68,6 +138,14 @@ let arquivoSelecionado = null;
  */
 function navigateTo(viewId) {
   AppState.viewAtual = viewId;
+
+  // Se não estiver logado, sempre redireciona para a tela de autenticação
+  if (!AppState.isLoggedIn) {
+    viewId = 'auth';
+  }
+
+  // Esconde a sidebar se estiver na tela de autenticação
+  document.getElementById('sidebar').style.display = (viewId === 'auth') ? 'none' : 'flex';
 
   // Oculta todas as views (adiciona classe 'hidden')
   document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));

@@ -3,7 +3,7 @@ const CONTEUDO_HISTORIA = {
   nome: 'História',
   icon: '🏛️',
   color: '#FFFBEB',
-  desc: 'Historia do Brasil e do Mundial',
+  desc: 'Historia mundial e do Brasil',
   topicos: [
     {
       id: 'historia-brasil',

@@ -1,369 +1,195 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LevelTecUp — Preparação IFAM · CMM · Matias Machline</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LevelTec</title>
 
-  <!-- Google Fonts: Syne (display) + DM Sans (corpo) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
-  <!-- Chart.js — gráficos de desempenho -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
-  <!-- Estilos da plataforma -->
-  <link rel="stylesheet" href="src/css/style.css" />
+  <link rel="stylesheet" href="src/css/style.css"/>
 </head>
 <body>
-  <!-- Cadastro e Login de usuário -->
-<section id="view-auth" class="view">
-  <div class="auth-container">
-    
-    <div id="auth-login-card" class="auth-card">
-      <div class="brand">⚡ LevelTecUp</div>
-      <h2>Entrar</h2>
-      <div class="form-group">
-        <label>Usuário</label>
-        <input type="text" id="loginUser" class="input-field">
+
+  <!-- TELA DE AUTENTICAÇÃO -->
+  <div id="auth-view">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">L</div>
+        <div class="auth-logo-text">LevelTec</div>
       </div>
-      <div class="form-group">
+      <div class="auth-title">Crie sua conta</div>
+      <div class="auth-sub">Comece sua jornada de aprendizado</div>
+      <div class="field">
+        <label>Nome Completo</label>
+        <input id="reg-name" type="text" placeholder="Seu nome completo"/>
+      </div>
+      <div class="field">
+        <label>Login</label>
+        <input id="reg-login" type="text" placeholder="Escolha um login"/>
+      </div>
+      <div class="field">
         <label>Senha</label>
-        <input type="password" id="loginPass" class="input-field">
+        <input id="reg-pass" type="password" placeholder="Crie uma senha"/>
       </div>
-      <button class="btn-primary btn-block" onclick="executarLogin()">Entrar</button>
-      <p class="auth-footer">Não tem conta? <a href="#" onclick="alternarAuth('cadastro')">Cadastre-se</a></p>
+      <button class="btn-primary" onclick="register()">Cadastrar e Entrar →</button>
+      <p id="auth-err" style="color:#EF4444;font-size:13px;margin-top:12px;text-align:center;display:none"></p>
     </div>
-
-    <div id="auth-register-card" class="auth-card hidden">
-      <div class="brand">⚡ LevelTecUp</div>
-      <h2>Novo Cadastro</h2>
-      
-      <div class="role-selector">
-        <button id="btnRoleAluno" class="btn-tab active" onclick="selecionarRole('aluno')">Sou Aluno</button>
-        <button id="btnRoleProf" class="btn-tab" onclick="selecionarRole('professor')">Sou Professor</button>
-      </div>
-
-      <div class="form-group">
-        <label id="labelNome">Nome Completo</label>
-        <input type="text" id="regNome" class="input-field">
-      </div>
-
-      <div id="groupIdade" class="form-group">
-        <label>Idade</label>
-        <input type="number" id="regIdade" class="input-field">
-      </div>
-
-      <div class="form-group">
-        <label>Nome de Usuário</label>
-        <input type="text" id="regUser" class="input-field">
-      </div>
-
-      <div class="form-group">
-        <label>Senha</label>
-        <input type="password" id="regPass" class="input-field">
-      </div>
-
-      <button class="btn-primary btn-block" onclick="executarCadastro()">Criar Conta</button>
-      <p class="auth-footer">Já tem conta? <a href="#" onclick="alternarAuth('login')">Fazer Login</a></p>
-    </div>
-
   </div>
-</section>
-  <!-- ════════════════════════════════════════════════
-       SIDEBAR — navegação lateral fixa
-  ════════════════════════════════════════════════ -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand">
-      <div class="brand-icon">⚡</div>
-      <span class="brand-name">LevelTecUp</span>
-    </div>
 
-    <!-- Perfil compacto do usuário ativo -->
-    <div class="sidebar-profile" id="sidebarProfile">
-      <div class="profile-avatar" id="sidebarAvatar">A</div>
-      <div class="profile-info">
-        <span class="profile-name" id="sidebarName">Aluno</span>
-        <span class="profile-role" id="sidebarRole">Estudante</span>
-      </div>
-    </div>
+  <!-- TELA PRINCIPAL DO APP -->
+  <div id="app-view">
 
-    <!-- Links de navegação principal -->
-    <nav class="sidebar-nav">
-      <button class="nav-item active" data-view="dashboard" onclick="navigateTo('dashboard')">
-        <span class="nav-icon">🏠</span> Dashboard
-      </button>
-      <button class="nav-item" data-view="modulos" onclick="navigateTo('modulos')">
-        <span class="nav-icon">📚</span> Módulos
-      </button>
-      <button class="nav-item" data-view="professor" onclick="navigateTo('professor')">
-        <span class="nav-icon">🎓</span> Painel do Professor
-      </button>
-      <button class="nav-item" data-view="materiais" onclick="navigateTo('materiais')">
-        <span class="nav-icon">📎</span> Materiais
-      </button>
-    </nav>
+    <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
-    <!-- Switch de perfil (Aluno / Professor) -->
-    <div class="sidebar-footer">
-      <div class="role-switcher">
-        <button class="role-btn active" id="btnAluno"  onclick="switchRole('aluno')">Aluno</button>
-        <button class="role-btn"        id="btnProf"   onclick="switchRole('professor')">Professor</button>
-      </div>
-    </div>
-  </aside>
-
-  <!-- ════════════════════════════════════════════════
-       CONTEÚDO PRINCIPAL
-  ════════════════════════════════════════════════ -->
-  <main class="main-content" id="mainContent">
-
-    <!-- ── VIEW: DASHBOARD ──────────────────────── -->
-    <section class="view" id="view-dashboard">
-      <header class="page-header">
-        <div>
-          <h1 class="page-title">Dashboard</h1>
-          <p class="page-subtitle" id="dashGreeting">Bom dia! Vamos estudar para o IFAM? ☀️</p>
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <div class="sidebar-logo-icon">L</div>
+          <div class="sidebar-logo-text">LevelTec</div>
         </div>
-        <div class="header-xp-badge">
-          <span class="xp-label">XP Total</span>
-          <span class="xp-value" id="headerXP">0</span>
-        </div>
-      </header>
-
-      <!-- Cards de estatísticas rápidas -->
-      <div class="stats-grid">
-        <div class="stat-card accent-green">
-          <div class="stat-icon">⭐</div>
-          <div class="stat-info">
-            <span class="stat-value" id="statXP">0</span>
-            <span class="stat-label">XP Acumulado</span>
-          </div>
-        </div>
-        <div class="stat-card accent-blue">
-          <div class="stat-icon">✅</div>
-          <div class="stat-info">
-            <span class="stat-value" id="statConcluidos">0</span>
-            <span class="stat-label">Subtemas Concluídos</span>
-          </div>
-        </div>
-        <div class="stat-card accent-purple">
-          <div class="stat-icon">📈</div>
-          <div class="stat-info">
-            <span class="stat-value" id="statProgresso">0%</span>
-            <span class="stat-label">Progresso Geral</span>
-          </div>
-        </div>
-        <div class="stat-card accent-orange">
-          <div class="stat-icon">🔥</div>
-          <div class="stat-info">
-            <span class="stat-value" id="statStreak">1</span>
-            <span class="stat-label">Dias Seguidos</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Progresso global + Barra de nível -->
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">Progresso Total do Curso</h2>
-          <span class="badge" id="progressBadge">🌱 Iniciante</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" id="globalProgressBar" style="width: 0%"></div>
-        </div>
-        <p class="progress-caption" id="progressCaption">0 de 0 subtemas concluídos</p>
-
-        <!-- Barra de XP dentro do nível atual -->
-        <div class="nivel-xp-card">
-          <div class="nivel-xp-info">
-            <span class="nivel-xp-label">Progresso no nível atual</span>
-            <span class="nivel-xp-pct" id="xpProximoNivel">0 XP para Curioso</span>
-          </div>
-          <div class="nivel-track">
-            <div class="nivel-fill" id="nivelProgressBar" style="width: 0%"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Gráfico de desempenho por área + Ranking de erros -->
-      <div class="charts-row">
-        <div class="card chart-card">
-          <div class="card-header">
-            <h2 class="card-title">Desempenho por Área</h2>
-          </div>
-          <canvas id="chartDesempenho" height="220"></canvas>
-        </div>
-
-        <div class="card ranking-card">
-          <div class="card-header">
-            <h2 class="card-title">🚨 Temas com Mais Erros</h2>
-          </div>
-          <ul class="ranking-list" id="rankingErros">
-            <li class="ranking-empty">Nenhum dado ainda. Complete exercícios!</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Botão de reset (útil para desenvolvimento/testes) -->
-      <div style="text-align:right;margin-top:8px;">
-        <button class="btn-reset" onclick="engineReset()">🔄 Resetar Progresso</button>
-      </div>
-    </section>
-
-    <!-- ── VIEW: MÓDULOS ─────────────────────────────── -->
-    <section class="view hidden" id="view-modulos">
-      <header class="page-header">
-        <div>
-          <h1 class="page-title">Módulos de Aprendizagem</h1>
-          <p class="page-subtitle">Conteúdo focado no IFAM · CMM · Matias Machline</p>
-        </div>
-      </header>
-      <div id="modulosContainer"></div>
-    </section>
-
-    <!-- ── VIEW: SUBTEMA (detalhe) ───────────────── -->
-    <section class="view hidden" id="view-subtema">
-      <header class="page-header">
-        <button class="btn-back" onclick="navigateTo('modulos')">← Voltar</button>
-        <div>
-          <h1 class="page-title" id="subtemaTitulo">Subtema</h1>
-          <p class="page-subtitle" id="subtemaPath">Área › Tema</p>
-        </div>
-      </header>
-
-      <!-- Conteúdo textual -->
-      <div class="card content-card">
-        <h3 class="section-heading">📖 Conteúdo</h3>
-        <div class="content-text" id="subtemaConteudo"></div>
-      </div>
-
-      <!-- Vídeo placeholder -->
-      <div class="card">
-        <h3 class="section-heading">🎬 Videoaula</h3>
-        <div class="video-placeholder" id="subtemaVideo">
-          <div class="video-inner">
-            <span class="video-icon">▶</span>
-            <span>Videoaula (em breve)</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Exercícios -->
-      <div class="card" id="exerciciosCard">
-        <h3 class="section-heading">✏️ Exercícios</h3>
-        <div id="exerciciosList"></div>
-      </div>
-
-      <!-- Conclusão e XP -->
-      <div class="card completion-card">
-        <div class="completion-info">
-          <div>
-            <h3>Marcar como Concluído</h3>
-            <p>Ganhe XP ao finalizar este subtema!</p>
-          </div>
-          <div class="xp-reward" id="xpReward">+50 XP</div>
-        </div>
-        <button class="btn-complete" id="btnConcluir" onclick="concluirSubtema()">
-          ✅ Concluir Subtema
+        <button class="sidebar-close" onclick="closeSidebar()">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
         </button>
       </div>
-    </section>
-
-    <!-- ── VIEW: PAINEL DO PROFESSOR ─────────────── -->
-    <section class="view hidden" id="view-professor">
-      <header class="page-header">
-        <div>
-          <h1 class="page-title">Painel do Professor</h1>
-          <p class="page-subtitle">Monitore o desempenho da turma em tempo real</p>
-        </div>
-      </header>
-
-      <div class="card chart-card-full">
-        <div class="card-header">
-          <h2 class="card-title">📊 Desempenho da Turma por Área</h2>
-        </div>
-        <canvas id="chartTurma" height="150"></canvas>
+      <div class="sidebar-user">
+        <div class="sidebar-user-name" id="sb-name">Usuário</div>
+        <div class="sidebar-user-xp" id="sb-xp">0 XP · Iniciante</div>
       </div>
+      <div class="sidebar-xp-bar">
+        <div class="sidebar-xp-fill" id="sb-xp-bar" style="width:0%"></div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-section-label">Menu</div>
+        <div class="nav-item active" onclick="showView('home')">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+            <path d="M9 21V12h6v9"/>
+          </svg>
+          Início
+        </div>
+        <div class="nav-item" onclick="showView('learn')">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          </svg>
+          Resumos
+        </div>
+        <div class="nav-item" onclick="showView('exercises')">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 8v4l3 3"/>
+          </svg>
+          Exercícios
+        </div>
+        <div class="nav-section-label">Conta</div>
+        <div class="nav-item danger" onclick="logout()">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          Sair
+        </div>
+      </div>
+    </nav>
 
-      <div class="prof-grid">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">🚨 Ranking de Erros da Turma</h2>
+    <header class="topbar">
+      <button class="topbar-hamburger" onclick="toggleSidebar()">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <div class="topbar-title" id="topbar-title">Início</div>
+      <div class="topbar-xp">⚡ <span id="topbar-xp">0</span> XP</div>
+    </header>
+
+    <main class="main">
+      <div class="content">
+
+        <div class="view active" id="view-home">
+          <div class="home-greeting" id="home-greeting">Olá! 👋</div>
+          <div class="home-sub">Continue sua jornada de aprendizado hoje.</div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-card-label">XP Total</div>
+              <div class="stat-card-value xp" id="home-xp">0</div>
+              <div class="xp-progress-wrap">
+                <div class="xp-progress-label">
+                  <span>Nível <span id="home-level">1</span></span>
+                  <span id="home-xp-next">100 XP próx.</span>
+                </div>
+                <div class="xp-bar">
+                  <div class="xp-bar-fill" id="home-xp-bar" style="width:0%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-label">Streak 🔥</div>
+              <div class="stat-card-value streak" id="home-streak">1</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:4px">dias seguidos</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-label">Aulas Feitas</div>
+              <div class="stat-card-value" id="home-lessons">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-label">Exercícios</div>
+              <div class="stat-card-value" id="home-exercises">0</div>
+            </div>
           </div>
-          <ul class="ranking-list" id="rankingErrosTurma">
-            <li class="ranking-empty">Aguardando dados dos alunos...</li>
-          </ul>
+          <div class="section-title">📚 Matérias</div>
+          <div class="materias-grid" id="materias-home"></div>
         </div>
 
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">👥 Ranking de Alunos</h2>
-          </div>
-          <ul class="students-list" id="alunosList"></ul>
+        <div class="view" id="view-learn">
+          <div class="breadcrumb" id="learn-breadcrumb"></div>
+          <div id="learn-content"></div>
         </div>
+
+        <div class="view" id="view-exercises">
+          <div class="breadcrumb" id="ex-breadcrumb"></div>
+          <div id="ex-content"></div>
+        </div>
+
       </div>
-    </section>
-
-    <!-- ── VIEW: MATERIAIS ───────────────────────────── -->
-    <section class="view hidden" id="view-materiais">
-      <header class="page-header">
-        <div>
-          <h1 class="page-title">Materiais Complementares</h1>
-          <p class="page-subtitle">Anexe e gerencie recursos de estudo</p>
-        </div>
-      </header>
-
-      <div class="card">
-        <h3 class="section-heading">📤 Enviar Material</h3>
-        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
-          <div class="upload-icon">📂</div>
-          <p>Clique para selecionar um arquivo</p>
-          <span class="upload-hint">Suporta: PDF, EPUB, DOCX, PPTX</span>
-        </div>
-        <!-- Input file oculto — não realiza upload real -->
-        <input type="file" id="fileInput" hidden accept=".pdf,.epub,.docx,.pptx"
-               onchange="simularUpload(this)" />
-        <div class="upload-form">
-          <input type="text"   id="uploadNome"  class="input-field" placeholder="Título do material" />
-          <select              id="uploadArea2" class="input-field">
-            <option value="">Selecionar área...</option>
-            <option value="Matemática">Matemática</option>
-            <option value="Física">Física</option>
-            <option value="Português">Português</option>
-            <option value="Ciências">Ciências</option>
-            <option value="Geral">Geral</option>
-          </select>
-          <button class="btn-primary" onclick="adicionarMaterial()">Adicionar Material</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3 class="section-heading">📚 Biblioteca de Materiais</h3>
-        <ul class="materiais-list" id="materiaisList">
-          <li class="ranking-empty">Nenhum material adicionado ainda.</li>
-        </ul>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Toast de notificação (XP, nível, avisos) -->
-  <div class="xp-toast hidden" id="xpToast">
-    <span class="toast-icon">⭐</span>
-    <span id="toastMsg">+50 XP conquistado!</span>
+    </main>
   </div>
 
-  <!--
-    ═══════════════════════════════════════════════════
-    SCRIPTS — carregados na ordem de dependência:
-    1. data.js   → CATALOGO e ALUNOS_TURMA
-    2. engine.js → AppState, NIVEIS e funções de engine*
-    3. main.js   → renderização e navegação (usa os anteriores)
-    ═══════════════════════════════════════════════════
-  -->
-  <script src="src/js/data.js"></script>
-  <script src="src/js/engine.js"></script>
-  <script src="src/js/localStorage/main.js"></script>
+  <div id="xp-toast"></div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SCRIPTS — carregue SEMPRE nesta ordem:
+       1. Conteúdos (textos e vídeos de cada matéria)
+       2. Questões (quizzes de cada matéria)
+       3. data/index.js (combina conteúdo + questões → DATA)
+       4. app.js (lógica principal que usa DATA)
+  ═══════════════════════════════════════════════════ -->
+
+  <!-- 1. Conteúdos -->
+  <script src="src/js/conteudo/geografia.js"></script>
+  <script src="src/js/conteudo/portugues.js"></script>
+  <script src="src/js/conteudo/matematica.js"></script>
+  <script src="src/js/conteudo/ciencias.js"></script>
+  <script src="src/js/conteudo/historia.js"></script>
+
+  <!-- 2. Questões -->
+  <script src="src/js/questoes/geografia.js"></script>
+  <script src="src/js/questoes/portugues.js"></script>
+  <script src="src/js/questoes/matematica.js"></script>
+  <script src="src/js/questoes/ciencias.js"></script>
+  <script src="src/js/questoes/historia.js"></script>
+
+  <!-- 3. Combina tudo no array DATA -->
+  <script src="src/js/index.js"></script>
+
+  <!-- 4. Lógica do app (usa DATA já montado) -->
+  <script src="src/js/app.js"></script>
+
 </body>
 </html>
